@@ -4,20 +4,23 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Demo class to read Policy information from a text file
- * and display details for each Policy.
+ * Demo class to read Policy information from a text file,
+ * display details for each Policy, and count smokers and non-smokers.
  */
 public class Demo {
 
     public static void main(String[] args) {
+        // List to store Policy objects dynamically
         ArrayList<Policy> policies = new ArrayList<>();
+        int smokerCount = 0;
+        int nonSmokerCount = 0;
 
         try {
             // Open the PolicyInformation.txt file
             File file = new File("PolicyInformation.txt");
             Scanner inputFile = new Scanner(file);
 
-            // Keep reading until the end of the file
+            // Read policies from the file
             while (inputFile.hasNext()) {
                 int policyNumber = inputFile.nextInt();
                 inputFile.nextLine(); // consume newline
@@ -32,20 +35,27 @@ public class Demo {
                 double height = inputFile.nextDouble();
                 double weight = inputFile.nextDouble();
 
-                // Check if there’s another line separating entries
+                // Skip any extra newline between entries
                 if (inputFile.hasNextLine()) {
                     inputFile.nextLine();
                 }
 
                 // Create a Policy object and add it to the list
                 Policy policy = new Policy(policyNumber, providerName, firstName, lastName,
-                                            age, smokingStatus, height, weight);
+                                           age, smokingStatus, height, weight);
                 policies.add(policy);
+
+                // Count smokers and non-smokers
+                if (smokingStatus.equalsIgnoreCase("smoker")) {
+                    smokerCount++;
+                } else {
+                    nonSmokerCount++;
+                }
             }
 
             inputFile.close();
 
-            // Display all policy information
+            // Display information for each policy
             for (Policy policy : policies) {
                 System.out.println("Policy Number: " + policy.getPolicyNumber());
                 System.out.println("Provider Name: " + policy.getProviderName());
@@ -60,10 +70,14 @@ public class Demo {
                 System.out.println("----------------------------------------");
             }
 
+            // Display totals
             System.out.println("Number of Policy objects created: " + policies.size());
+            System.out.println("Number of smokers: " + smokerCount);
+            System.out.println("Number of non-smokers: " + nonSmokerCount);
 
         } catch (FileNotFoundException e) {
-            System.out.println("Error: The file was not found.");
+            System.out.println("Error: The file PolicyInformation.txt was not found.");
         }
     }
 }
+
